@@ -80,7 +80,8 @@
             <p class="text-base sm:text-lg text-gray-300 mb-8 leading-relaxed">
                 請選擇一個測驗版本 (每回10題)
             </p>
-            <div class="space-y-4 w-full max-w-sm">
+            <!-- Scrollable container for buttons -->
+            <div class="space-y-4 w-full max-w-sm max-h-[50vh] overflow-y-auto pr-2">
                 <button onclick="startPracticeVersion(1)" class="w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 px-6 rounded-lg text-lg sm:text-xl transition duration-300 transform hover:scale-105">
                     測驗版本 (一)
                 </button>
@@ -96,7 +97,27 @@
                 <button onclick="startPracticeVersion(5)" class="w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 px-6 rounded-lg text-lg sm:text-xl transition duration-300 transform hover:scale-105">
                     測驗版本 (五)
                 </button>
-                <hr class="border-gray-600 my-4">
+                <!-- NEW Buttons for versions 6-10 -->
+                <button onclick="startPracticeVersion(6)" class="w-full bg-cyan-500 hover:bg-cyan-600 text-gray-900 font-bold py-3 px-6 rounded-lg text-lg sm:text-xl transition duration-300 transform hover:scale-105">
+                    測驗版本 (六)
+                </button>
+                <button onclick="startPracticeVersion(7)" class="w-full bg-cyan-500 hover:bg-cyan-600 text-gray-900 font-bold py-3 px-6 rounded-lg text-lg sm:text-xl transition duration-300 transform hover:scale-105">
+                    測驗版本 (七)
+                </button>
+                <button onclick="startPracticeVersion(8)" class="w-full bg-cyan-500 hover:bg-cyan-600 text-gray-900 font-bold py-3 px-6 rounded-lg text-lg sm:text-xl transition duration-300 transform hover:scale-105">
+                    測驗版本 (八)
+                </button>
+                <button onclick="startPracticeVersion(9)" class="w-full bg-cyan-500 hover:bg-cyan-600 text-gray-900 font-bold py-3 px-6 rounded-lg text-lg sm:text-xl transition duration-300 transform hover:scale-105">
+                    測驗版本 (九)
+                </button>
+                <button onclick="startPracticeVersion(10)" class="w-full bg-cyan-500 hover:bg-cyan-600 text-gray-900 font-bold py-3 px-6 rounded-lg text-lg sm:text-xl transition duration-300 transform hover:scale-105">
+                    測驗版本 (十)
+                </button>
+            </div>
+            
+            <hr class="border-gray-600 my-4 w-full max-w-sm">
+            
+            <div class="space-y-4 w-full max-w-sm">
                 <button onclick="showFavoritesModal()" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-6 rounded-lg text-lg sm:text-xl transition duration-300">
                     我的最愛單字 (雲端)
                 </button>
@@ -208,26 +229,16 @@
                 // 1. 取得 Canvas 環境提供的設定
                 const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
                 
-                // --- !! 重要更正 !! ---
-                // 您回報的錯誤 "ReferenceError: __firebase_config is not defined" 
-                // 是因為這個程式碼預期在一個會自動提供 Firebase 設定的環境中執行。
+                // --- !! 重要 !! ---
                 // 如果您是在自己的電腦上執行，請在此處貼上您自己的 Firebase 設定：
                 
                 // 1. 前往 https://firebase.google.com/ 建立一個新專案.
                 // 2. 在專案中，建立一個 "Web" 應用程式.
                 // 3. 啟用 "Authentication" (使用「匿名登入」) 和 "Firestore" (雲端資料庫).
-                // 4. Firebase 會提供一個 'firebaseConfig' 物件，像這樣：
-                // const userProvidedConfig = {
-                //   apiKey: "AIz..._S0",
-                //   authDomain: "your-project-id.firebaseapp.com",
-                //   projectId: "your-project-id",
-                //   storageBucket: "your-project-id.appspot.com",
-                //   messagingSenderId: "123...",
-                //   appId: "1:123...:web:abc..."
-                // };
-                // 5. 將您的 'userProvidedConfig' 貼在下面。
+                // 4. Firebase 會提供一個 'firebaseConfig' 物件.
+                // 5. 將您的 'firebaseConfig' 貼在下面 `userProvidedConfig` 的 `null` 位置。
                 
-                const userProvidedConfig = { // <-- 這是您貼上的設定
+                const userProvidedConfig = {
                     apiKey: "AIzaSyBGKhmlG8jbgTuZB7o6p3prgc4aInIeaZ4",
                     authDomain: "english-e9852.firebaseapp.com",
                     projectId: "english-e9852",
@@ -236,9 +247,9 @@
                     appId: "1:895420942597:web:eb0192ad35726e05be4f6c"
                     };
                 
-                /* * 修正: 恢復了原始的 'firebaseConfig' 判斷邏輯。
-                 * 這會優先使用環境變數 (如果存在)，
-                 * 否則回退到您上方貼上的 'userProvidedConfig'。
+                /*
+                 * 這段邏輯會優先使用環境自動提供的 'firebaseConfig' (如果存在)。
+                 * 否則, 它會回退到您上方貼上的 'userProvidedConfig'。
                  */
                 const firebaseConfig = (typeof __firebase_config !== 'undefined') 
                     ? JSON.parse(__firebase_config) 
@@ -395,7 +406,7 @@
         }
 
         // --- DATA ---
-        // 題庫已合併為單一練習題庫 (共 50 題，分為 5 組)
+        // 題庫已合併為單一練習題庫 (共 100 題，分為 10 組)
         const allPracticeQuestions = [
             // --- 版本 1 (Easy/Common) ---
             { type: 'reading', difficulty: 1, question: "An ____ is a fruit that is usually red or green.", translation: "一種____是通常為紅色或綠色的水果。", options: ["apple", "animal", "apartment", "action"], answer: 0, keywords: [
@@ -555,8 +566,169 @@
             ] },
             { type: 'reading', difficulty: 3, "question": "When you ____ for a job, you should prepare a good resume.", "translation": "當你____一份工作時，你應該準備一份好的履歷。", "options": ["ask", "apply", "appeal", "appoint"], "answer": 1, "keywords": [
                 { "word": "ask", "translation": "詢問", "example": "Ask a question.", "example_translation": "問個問題。" }, { "word": "apply", "translation": "申請", "example": "I will apply for the job.", "example_translation": "我將申請這份工作。" }, { "word": "appeal", "translation": "吸引；上訴", "example": "The idea appealed to me.", "example_translation": "這個點子吸引了我。" }, { "word": "appoint", "translation": "任命", "example": "He was appointed as manager.", "example_translation": "他被任命為經理。" }
+            ] },
+
+            // --- 版本 6 (NEW) ---
+            { type: 'reading', difficulty: 1, question: "A ____ is a place where we go to see movies.", translation: "____是我們去看電影的地方。", options: ["library", "theater", "hospital", "market"], answer: 1, keywords: [
+                { word: 'library', translation: '圖書館', example: 'I borrow books from the library.', example_translation: '我從圖書館借書。' }, { word: 'theater', translation: '電影院；劇院', example: 'Let\'s go to the theater.', example_translation: '我們去看電影吧。' }, { word: 'hospital', translation: '醫院', example: 'He works at a hospital.', example_translation: '他在醫院工作。' }, { word: 'market', translation: '市場', example: 'I buy vegetables at the market.', example_translation: '我在市場買蔬菜。' }
+            ] },
+            { type: 'reading', difficulty: 2, question: "The police are looking for ____ to solve the crime.", translation: "警方正在尋找____來偵破這起案件。", options: ["clues", "clouds", "clubs", "cliffs"], answer: 0, keywords: [
+                { word: 'clues', translation: '線索 (複數)', example: 'There are no clues.', example_translation: '沒有任何線索。' }, { word: 'clouds', translation: '雲 (複數)', example: 'The sky is full of clouds.', example_translation: '天空滿是雲。' }, { word: 'clubs', translation: '社團；俱樂部', example: 'He joined the music club.', example_translation: '他參加了音樂社。' }, { word: 'cliffs', translation: '懸崖 (複數)', example: 'Be careful near the cliffs.', example_translation: '靠近懸崖要小心。' }
+            ] },
+            { type: 'reading', difficulty: 2, question: "It is ____ to see a rainbow after the rain.", translation: "雨後看到彩虹是____的。", options: ["common", "correct", "creative", "curious"], answer: 0, keywords: [
+                { word: 'common', translation: '常見的', example: 'It is a common mistake.', example_translation: '這是一個常見的錯誤。' }, { word: 'correct', translation: '正確的', example: 'Your answer is correct.', example_translation: '你的答案是正確的。' }, { word: 'creative', translation: '有創意的', example: 'She is a creative artist.', example_translation: '她是一位有創意的藝術家。' }, { word: 'curious', translation: '好奇的', example: 'The cat is curious.', example_translation: '貓很好奇。' }
+            ] },
+            { type: 'reading', difficulty: 3, question: "The government will take measures to ____ the economy.", translation: "政府將採取措施來____經濟。", options: ["stain", "stress", "stir", "stimulate"], answer: 3, keywords: [
+                { word: 'stain', translation: '污漬', example: 'There is a stain on your shirt.', example_translation: '你的襯衫上有個污漬。' }, { word: 'stress', translation: '壓力', example: 'He is under a lot of stress.', example_translation: '他壓力很大。' }, { word: 'stir', translation: '攪拌', example: 'Stir the soup.', example_translation: '攪拌湯。' }, { word: 'stimulate', translation: '刺激', example: 'The news stimulated interest.', example_translation: '這則新聞激發了興趣。' }
+            ] },
+            { type: 'reading', difficulty: 1, question: "He is my ____, and we play together every day.", translation: "他是我的____，我們每天都在一起玩。", options: ["friend", "front", "fruit", "frog"], answer: 0, keywords: [
+                { word: 'friend', translation: '朋友', example: 'He is my best friend.', example_translation: '他是我最好的朋友。' }, { word: 'front', translation: '前面', example: 'in front of the house', example_translation: '在房子前面。' }, { word: 'fruit', translation: '水果', example: 'I like to eat fruit.', example_translation: '我喜歡吃水果。' }, { word: 'frog', translation: '青蛙', example: 'A frog is in the pond.', example_translation: '池塘裡有隻青蛙。' }
+            ] },
+            { type: 'reading', difficulty: 2, question: "Students are not allowed to ____ during the exam.", translation: "考試期間學生不准____。", options: ["chew", "check", "chat", "cheat"], answer: 3, keywords: [
+                { word: 'chew', translation: '咀嚼', example: 'Chew your food well.', example_translation: '充分咀嚼你的食物。' }, { word: 'check', translation: '檢查', example: 'Check your answers.', example_translation: '檢查你的答案。' }, { word: 'chat', translation: '聊天', example: 'They are chatting.', example_translation: '他們正在聊天。' }, { word: 'cheat', translation: '作弊', example: 'Don\'t cheat on the test.', example_translation: '考試不要作弊。' }
+            ] },
+            { type: 'reading', difficulty: 2, question: "This is a book of ____ folk tales, which are stories passed down from generation to generation.", translation: "這是一本____民間故事書，這些故事是代代相傳的。", options: ["ancient", "anxious", "annual", "automatic"], answer: 0, keywords: [
+                { word: 'ancient', translation: '古代的', example: 'This is an ancient temple.', example_translation: '這是一座古老的寺廟。' }, { word: 'anxious', translation: '焦慮的', example: 'I am anxious about the test.', example_translation: '我對考試感到焦慮。' }, { word: 'annual', translation: '一年一度的', example: 'the annual meeting', example_translation: '年度會議。' }, { word: 'automatic', translation: '自動的', example: 'This is an automatic door.', example_translation: '這是自動門。' }
+            ] }, // 107 統測
+            { type: 'reading', difficulty: 3, question: "The medicine is ____, but it works well.", translation: "這藥很____，但很有效。", options: ["bitter", "better", "bright", "brave"], answer: 0, keywords: [
+                { word: 'bitter', translation: '苦的', example: 'The coffee is bitter.', example_translation: '咖啡很苦。' }, { word: 'better', translation: '更好的', example: 'I feel better today.', example_translation: '我今天感覺好多了。' }, { word: 'bright', translation: '明亮的', example: 'The future is bright.', example_translation: '未來是光明的。' }, { word: 'brave', translation: '勇敢的', example: 'He is a brave soldier.', example_translation: '他是一名勇敢的士兵。' }
+            ] },
+            { type: 'reading', difficulty: 3, question: "After a long negotiation, both sides finally reached an ____.", translation: "經過長時間的談判，雙方終於達成了____。", options: ["agreement", "argument", "apartment", "appointment"], answer: 0, keywords: [
+                { word: 'agreement', translation: '協議；同意', example: 'They signed an agreement.', example_translation: '他們簽署了一項協議。' }, { word: 'argument', translation: '爭論', example: 'We had an argument.', example_translation: '我們發生了爭執。' }, { word: 'apartment', translation: '公寓', example: 'She lives in a new apartment.', example_translation: '她住在一間新公寓。' }, { word: 'appointment', translation: '預約；任命', example: 'I have a doctor\'s appointment.', example_translation: '我預約了看醫生。' }
+            ] },
+            { type: 'reading', difficulty: 2, question: "He is a ____; he makes bread and cakes.", translation: "他是一名____；他製作麵包和蛋糕。", options: ["baker", "banker", "barber", "butcher"], answer: 0, keywords: [
+                { word: 'baker', translation: '麵包師', example: 'The baker gets up early.', example_translation: '麵包師很早起床。' }, { word: 'banker', translation: '銀行家', example: 'He is a rich banker.', example_translation: '他是一位富有的銀行家。' }, { word: 'barber', translation: '理髮師 (男)', example: 'I need to go to the barber.', example_translation: '我需要去找理髮師。' }, { word: 'butcher', translation: '屠夫', example: 'The butcher sells meat.', example_translation: '屠夫賣肉。' }
+            ] },
+
+            // --- 版本 7 (NEW) ---
+            { type: 'reading', difficulty: 1, question: "A ____ is a large, wild cat with stripes.", translation: "____是一種帶有條紋的大型野生貓科動物。", options: ["lion", "tiger", "bear", "wolf"], answer: 1, keywords: [
+                { word: 'lion', translation: '獅子', example: 'The lion is the king of the jungle.', example_translation: '獅子是叢林之王。' }, { word: 'tiger', translation: '老虎', example: 'A tiger has stripes.', example_translation: '老虎有條紋。' }, { word: 'bear', translation: '熊', example: 'I saw a bear in the zoo.', example_translation: '我在動物園看到一隻熊。' }, { word: 'wolf', translation: '狼', example: 'A wolf hunts in a pack.', example_translation: '狼是群體狩獵的。' }
+            ] },
+            { type: 'reading', difficulty: 2, question: "We all have a ____ to protect the environment.", translation: "我們都有____保護環境。", options: ["duty", "doubt", "dust", "debt"], answer: 0, keywords: [
+                { word: 'duty', translation: '責任', example: 'It is our duty to help.', example_translation: '幫助是我們的責任。' }, { word: 'doubt', translation: '懷疑', example: 'I have no doubt about it.', example_translation: '我對此毫不懷疑。' }, { word: 'dust', translation: '灰塵', example: 'The table is covered in dust.', example_translation: '桌上佈滿灰塵。' }, { word: 'debt', translation: '債務', example: 'He is in debt.', example_translation: '他負債累累。' }
+            ] },
+            { type: 'reading', difficulty: 2, question: "He ____ his country in the Olympics.", translation: "他在奧運會上____他的國家。", options: ["repeated", "reported", "represented", "required"], answer: 2, keywords: [
+                { word: 'repeated', translation: '重複 (v. 過去式)', example: 'He repeated the question.', example_translation: '他重複了這個問題。' }, { word: 'reported', translation: '報導 (v. 過去式)', example: 'The news was reported.', example_translation: '這則新聞被報導了。' }, { word: 'represented', translation: '代表 (v. 過去式)', example: 'He represented our school.', example_translation: '他代表了我們學校。' }, { word: 'required', translation: '要求 (v. 過去式)', example: 'This task required time.', example_translation: '這項任務需要時間。' }
+            ] },
+            { type: 'reading', difficulty: 3, question: "The earthquake caused ____ damage to the city.", translation: "地震對這座城市造成了____的破壞。", options: ["massive", "modest", "magical", "mature"], answer: 0, keywords: [
+                { word: 'massive', translation: '巨大的', example: 'It was a massive explosion.', example_translation: '那是一場巨大的爆炸。' }, { word: 'modest', translation: '謙虛的', example: 'She is very modest.', example_translation: '她非常謙虛。' }, { word: 'magical', translation: '神奇的', example: 'It was a magical experience.', example_translation: '那是一次神奇的經歷。' }, { word: 'mature', translation: '成熟的', example: 'He is a mature person.', example_translation: '他是個成熟的人。' }
+            ] },
+            { type: 'reading', difficulty: 1, question: "The opposite of 'fast' is ____.", translation: "'快'的相反是____。", options: ["slow", "quick", "small", "soft"], answer: 0, keywords: [
+                { word: 'slow', translation: '慢的', example: 'He is a slow runner.', example_translation: '他是個跑很慢的人。' }, { word: 'quick', translation: '快的', example: 'She has a quick mind.', example_translation: '她反應很快。' }, { word: 'small', translation: '小的', example: 'a small box', example_translation: '一個小盒子。' }, { word: 'soft', translation: '軟的', example: 'a soft pillow', example_translation: '一個軟枕頭。' }
+            ] },
+            { type: 'reading', difficulty: 2, question: "She wants to be a ____ to help people who are sick.", translation: "她想成為一名____來幫助生病的人。", options: ["nurse", "nerd", "neighbor", "nephew"], answer: 0, keywords: [
+                { word: 'nurse', translation: '護士', example: 'The nurse took my temperature.', example_translation: '護士量了我的體溫。' }, { word: 'nerd', translation: '書呆子', example: 'He is a computer nerd.', example_translation: '他是個電腦迷。' }, { word: 'neighbor', translation: '鄰居', example: 'My neighbor is friendly.', example_translation: '我的鄰居很友善。' }, { word: 'nephew', translation: '侄子；外甥', example: 'He is my nephew.', example_translation: '他是我侄子。' }
+            ] },
+            { type: 'reading', difficulty: 2, question: "The singer's ____ album will be released next month.", translation: "這位歌手的____專輯將於下個月發行。", options: ["latest", "last", "least", "less"], answer: 0, keywords: [
+                { word: 'latest', translation: '最新的', example: 'This is the latest news.', example_translation: '這是最新消息。' }, { word: 'last', translation: '最後的；上一個', example: 'This is the last chance.', example_translation: '這是最後的機會。' }, { word: 'least', translation: '最少的', example: 'He has the least money.', example_translation: '他的錢最少。' }, { word: 'less', translation: '較少的', example: 'I have less time.', example_translation: '我的時間比較少。' }
+            ] },
+            { type: 'reading', difficulty: 3, question: "The factory was closed down because it was ____ a lot of pollution.", translation: "這家工廠被關閉了，因為它____了大量污染。", options: ["causing", "catching", "carrying", "counting"], answer: 0, keywords: [
+                { word: 'causing', translation: '造成 (v-ing)', example: 'What is causing the problem?', example_translation: '是什麼造成了這個問題？' }, { word: 'catching', translation: '抓 (v-ing)', example: 'He is catching a ball.', example_translation: '他正在接球。' }, { word: 'carrying', translation: '攜帶 (v-ing)', example: 'She is carrying a bag.', example_translation: '她正提著一個袋子。' }, { word: 'counting', translation: '數 (v-ing)', example: 'I am counting the money.', example_translation: '我正在數錢。' }
+            ] },
+            { type: 'reading', difficulty: 3, question: "The company ____ provides free snacks and drinks for its employees.", translation: "這家公司____為員工提供免費零食和飲料。", options: ["generously", "generally", "genuinely", "gradually"], answer: 0, keywords: [
+                { word: 'generously', translation: '慷慨地', example: 'He generously donated money.', example_translation: '他慷慨地捐了錢。' }, { word: 'generally', translation: '通常；一般地', example: 'I generally wake up early.', example_translation: '我通常很早起床。' }, { word: 'genuinely', translation: '真誠地', example: 'He was genuinely surprised.', example_translation: '他真的感到很驚訝。' }, { word: 'gradually', translation: '逐漸地', example: 'The weather gradually improved.', example_translation: '天氣逐漸好轉。' }
+            ] },
+            { type: 'reading', difficulty: 2, question: "The ____ from the burning building was thick and dark.", translation: "燃燒中建築物的____又濃又黑。", options: ["smoke", "snake", "snack", "snow"], answer: 0, keywords: [
+                { word: 'smoke', translation: '煙', example: 'Don\'t smoke here.', example_translation: '這裡不要抽煙。' }, { word: 'snake', translation: '蛇', example: 'I am afraid of snakes.', example_translation: '我怕蛇。' }, { word: 'snack', translation: '點心', example: 'I had a snack.', example_translation: '我吃了個點心。' }, { word: 'snow', translation: '雪', example: 'It is starting to snow.', example_translation: '開始下雪了。' }
+            ] },
+
+            // --- 版本 8 (NEW) ---
+            { type: 'reading', difficulty: 1, question: "We go to school to ____ new things.", translation: "我們上學是為了____新事物。", options: ["learn", "leave", "lend", "lead"], answer: 0, keywords: [
+                { word: 'learn', translation: '學習', example: 'I want to learn English.', example_translation: '我想學英文。' }, { word: 'leave', translation: '離開', example: 'Please leave now.', example_translation: '請現在離開。' }, { word: 'lend', translation: '借出', example: 'Can you lend me a pen?', example_translation: '你能借我一支筆嗎？' }, { word: 'lead', translation: '領導', example: 'He will lead the team.', example_translation: '他將領導這個團隊。' }
+            ] },
+            { type: 'reading', difficulty: 2, question: "He is so ____ that he never forgets to say 'thank you' and 'please.'", translation: "他是如此____，他從不忘記說「謝謝」和「請」。", options: ["polite", "plain", "poor", "proud"], answer: 0, keywords: [
+                { word: 'polite', translation: '有禮貌的', example: 'It is polite to say thank you.', example_translation: '說謝謝是很有禮貌的。' }, { word: 'plain', translation: '樸素的；清楚的', example: 'The food was plain.', example_translation: '食物很清淡。' }, { word: 'poor', translation: '貧窮的', example: 'He is a poor man.', example_translation: '他是個窮人。' }, { word: 'proud', translation: '驕傲的', example: 'She is proud of her son.', example_translation: '她為她的兒子感到驕傲。' }
+            ] },
+            { type: 'reading', difficulty: 2, question: "The store has a special ____ this week: buy one, get one free.", translation: "這家商店本週有特別____：買一送一。", options: ["offer", "office", "officer", "opinion"], answer: 0, keywords: [
+                { word: 'offer', translation: '提供；優惠', example: 'This is a special offer.', example_translation: '這是一個特別優惠。' }, { word: 'office', translation: '辦公室', example: 'I work in an office.', example_translation: '我在辦公室工作。' }, { word: 'officer', translation: '官員；警官', example: 'He is a police officer.', example_translation: '他是一名警官。' }, { word: 'opinion', translation: '意見', example: 'What is your opinion?', example_translation: '你的意見是什麼？' }
+            ] },
+            { type: 'reading', difficulty: 3, question: "It is not easy to ____ a large company with thousands of employees.", translation: "要____一家擁有數千名員工的大公司並不容易。", options: ["manage", "damage", "imagine", "message"], answer: 0, keywords: [
+                { word: 'manage', translation: '管理', example: 'He manages the team.', example_translation: '他管理這個團隊。' }, { word: 'damage', translation: '損害', example: 'The storm damaged the house.', example_translation: '暴風雨損壞了房子。' }, { word: 'imagine', translation: '想像', example: 'Imagine a world without music.', example_translation: '想像一個沒有音樂的世界。' }, { word: 'message', translation: '訊息', example: 'I sent you a message.', example_translation: '我發了個訊息給你。' }
+            ] },
+            { type: 'reading', difficulty: 1, question: "A ____ is a person who flies an airplane.", translation: "____是駕駛飛機的人。", options: ["pilot", "pirate", "poet", "police"], answer: 0, keywords: [
+                { word: 'pilot', translation: '飛行員', example: 'The pilot landed the plane.', example_translation: '飛行員將飛機降落。' }, { word: 'pirate', translation: '海盜', example: 'Jack Sparrow is a pirate.', example_translation: '傑克·史派羅是個海盜。' }, { word: 'poet', translation: '詩人', example: 'He is a famous poet.', example_translation: '他是一位著名的詩人。' }, { word: 'police', translation: '警察', example: 'Call the police.', example_translation: '叫警察。' }
+            ] },
+            { type: 'reading', difficulty: 2, question: "It is my ____ to take out the trash on Monday.", translation: "週一倒垃圾是我的____。", options: ["responsibility", "reality", "religion", "region"], answer: 0, keywords: [
+                { word: 'responsibility', translation: '責任', example: 'It is your responsibility.', example_translation: '這是你的責任。' }, { word: 'reality', translation: '現實', example: 'Face the reality.', example_translation: '面對現實。' }, { word: 'religion', translation: '宗教', example: 'What is your religion?', example_translation: '你的宗教信仰是什麼？' }, { word: 'region', translation: '地區', example: 'This region is famous for tea.', example_translation: '這個地區以茶聞名。' }
+            ] },
+            { type: 'reading', difficulty: 2, question: "Can you ____ a good restaurant near here?", translation: "你能____一家這附近不錯的餐廳嗎？", options: ["recommend", "record", "recover", "reduce"], answer: 0, keywords: [
+                { word: 'recommend', translation: '推薦', example: 'I recommend this book.', example_translation: '我推薦這本書。' }, { word: 'record', translation: '記錄', example: 'He broke the world record.', example_translation: '他打破了世界紀錄。' }, { word: 'recover', translation: '恢復', example: 'He recovered from illness.', example_translation: '他病癒了。' }, { word: 'reduce', translation: '減少', example: 'We need to reduce waste.', example_translation: '我們需要減少浪費。' }
+            ] },
+            { type: 'reading', difficulty: 3, question: "This company is looking for people with ____ in marketing.", translation: "這家公司正在尋找有行銷____的人。", options: ["experience", "experiment", "explanation", "expression"], answer: 0, keywords: [
+                { word: 'experience', translation: '經驗', example: 'He has work experience.', example_translation: '他有工作經驗。' }, { word: 'experiment', translation: '實驗', example: 'We did an experiment.', example_translation: '我們做了一個實驗。' }, { word: 'explanation', translation: '解釋', example: 'He gave an explanation.', example_translation: '他給了一個解釋。' }, { word: 'expression', translation: '表情；表達', example: 'a happy expression', example_translation: '快樂的表情。' }
+            ] },
+            { type: 'reading', difficulty: 3, question: "He ____ his goal of running a marathon after months of training.", translation: "經過幾個月的訓練，他____了他跑馬拉松的目標。", options: ["achieved", "attacked", "attended", "avoided"], answer: 0, keywords: [
+                { word: 'achieved', translation: '達成 (v. 過去式)', example: 'He achieved his dream.', example_translation: '他實現了他的夢想。' }, { word: 'attacked', translation: '攻擊 (v. 過去式)', example: 'The enemy attacked.', example_translation: '敵人攻擊了。' }, { word: 'attended', translation: '出席 (v. 過去式)', example: 'He attended the meeting.', example_translation: '他出席了會議。' }, { word: 'avoided', translation: '避免 (v. 過去式)', example: 'He avoided the question.', example_translation: '他迴避了這個問題。' }
+            ] },
+            { type: 'reading', difficulty: 2, question: "If you don't know the answer, you can ____.", translation: "如果你不知道答案，你可以____。", options: ["guess", "guard", "guide", "glue"], answer: 0, keywords: [
+                { word: 'guess', translation: '猜測', example: 'Take a guess.', example_translation: '猜猜看。' }, { word: 'guard', translation: '守衛', example: 'A guard is at the gate.', example_translation: '門口有個守衛。' }, { word: 'guide', translation: '嚮導', example: 'We hired a tour guide.', example_translation: '我們雇了一個導遊。' }, { word: 'glue', translation: '膠水', example: 'Use glue to stick it.', example_translation: '用膠水把它黏起來。' }
+            ] },
+
+            // --- 版本 9 (NEW) ---
+            { type: 'reading', difficulty: 1, question: "A ____ helps us know what time it is.", translation: "____幫助我們知道現在幾點。", options: ["clock", "cloud", "clown", "coin"], answer: 0, keywords: [
+                { word: 'clock', translation: '時鐘', example: 'The clock is on the wall.', example_translation: '時鐘在牆上。' }, { word: 'cloud', translation: '雲', example: 'Look at the white cloud.', example_translation: '看那朵白雲。' }, { word: 'clown', translation: '小丑', example: 'The clown is funny.', example_translation: '小丑很滑稽。' }, { word: 'coin', translation: '硬幣', example: 'I found a coin.', example_translation: '我找到一枚硬幣。' }
+            ] },
+            { type: 'reading', difficulty: 2, question: "He felt a great sense of ____ after finishing the difficult project.", translation: "完成這個困難的專案後，他感到巨大的____。", options: ["relief", "belief", "brief", "chief"], answer: 0, keywords: [
+                { word: 'relief', translation: '寬慰；解脫', example: 'It was a relief to be home.', example_translation: '回到家真是鬆了口氣。' }, { word: 'belief', translation: '信念', example: 'That is my belief.', example_translation: '那是我的信念。' }, { word: 'brief', translation: '簡短的', example: 'a brief meeting', example_translation: '一個簡短的會議。' }, { word: 'chief', translation: '首領；主要的', example: 'He is the chief of police.', example_translation: '他是警察局長。' }
+            ] },
+            { type: 'reading', difficulty: 2, question: "Please be ____ when you cross the street.", translation: "過馬路時請____。", options: ["careful", "cheerful", "powerful", "useful"], answer: 0, keywords: [
+                { word: 'careful', translation: '小心的', example: 'Be careful with the glass.', example_translation: '小心那個玻璃杯。' }, { word: 'cheerful', translation: '快樂的', example: 'She has a cheerful smile.', example_translation: '她有著開朗的笑容。' }, { word: 'powerful', translation: '強大的', example: 'a powerful engine', example_translation: '強大的引擎。' }, { word: 'useful', translation: '有用的', example: 'This tool is useful.', example_translation: '這個工具有用。' }
+            ] },
+            { type: 'reading', difficulty: 3, question: "This company is a ____ supplier of computer parts.", translation: "這家公司是電腦零件的____供應商。", options: ["major", "mirror", "minor", "magic"], answer: 0, keywords: [
+                { word: 'major', translation: '主要的', example: 'He plays a major role.', example_translation: '他扮演一個主要角色。' }, { word: 'mirror', translation: '鏡子', example: 'Look in the mirror.', example_translation: '照照鏡子。' }, { word: 'minor', translation: '次要的；未成年人', example: 'It is a minor problem.', example_translation: '這是個小問題。' }, { word: 'magic', translation: '魔術', example: 'He likes magic tricks.', example_translation: '他喜歡魔術。' }
+            ] },
+            { type: 'reading', difficulty: 1, question: "We wear a ____ on our head to protect it.", translation: "我們在頭上戴____來保護它。", options: ["helmet", "hammer", "hanger", "handle"], answer: 0, keywords: [
+                { word: 'helmet', translation: '安全帽；頭盔', example: 'Wear your helmet.', example_translation: '戴上你的安全帽。' }, { word: 'hammer', translation: '榔頭', example: 'I need a hammer.', example_translation: '我需要一把榔頭。' }, { word: 'hanger', translation: '衣架', example: 'Use a hanger for your coat.', example_translation: '用衣架掛你的外套。' }, { word: 'handle', translation: '把手', example: 'the door handle', example_translation: '門把。' }
+            ] },
+            { type: 'reading', difficulty: 2, question: "The ____ of this country is hot and humid.", translation: "這個國家的____炎熱潮濕。", options: ["climate", "client", "cliff", "clinic"], answer: 0, keywords: [
+                { word: 'climate', translation: '氣候', example: 'Taiwan has a warm climate.', example_translation: '台灣氣候溫暖。' }, { word: 'client', translation: '客戶', example: 'The lawyer met his client.', example_translation: '律師見了他的客戶。' }, { word: 'cliff', translation: '懸崖', example: 'He stood on the cliff.', example_translation: '他站在懸崖上。' }, { word: 'clinic', translation: '診所', example: 'I went to the clinic.', example_translation: '我去了診所。' }
+            ] },
+            { type: 'reading', difficulty: 2, question: "He works hard to ____ his family.", translation: "他努力工作以____他的家庭。", options: ["support", "suppose", "supply", "survive"], answer: 0, keywords: [
+                { word: 'support', translation: '支持；扶養', example: 'He has a family to support.', example_translation: '他有家要養。' }, { word: 'suppose', translation: '猜想', example: 'I suppose you are right.', example_translation: '我想你是對的。' }, { word: 'supply', translation: '供應', example: 'We supply food.', example_translation: '我們供應食物。' }, { word: 'survive', translation: '生存', example: 'He survived the crash.', example_translation: '他在車禍中倖存下來。' }
+            ] },
+            { type: 'reading', difficulty: 3, question: "The government is trying to find a ____ to the housing problem.", translation: "政府正試圖找出房屋問題的____。", options: ["solution", "pollution", "selection", "situation"], answer: 0, keywords: [
+                { word: 'solution', translation: '解決方案', example: 'We need to find a solution.', example_translation: '我們需要找到一個解決方案。' }, { word: 'pollution', translation: '污染', example: 'Air pollution is serious.', example_translation: '空氣污染很嚴重。' }, { word: 'selection', translation: '選擇', example: 'a wide selection of books', example_translation: '多樣的書籍選擇。' }, { word: 'situation', translation: '情況', example: 'The situation is difficult.', example_translation: '情況很困難。' }
+            ] },
+            { type: 'reading', difficulty: 3, question: "This material is very ____. It can be bent easily.", translation: "這種材料非常____。它可以輕易彎曲。", options: ["flexible", "fixable", "formal", "flat"], answer: 0, keywords: [
+                { word: 'flexible', translation: '有彈性的', example: 'This plastic is flexible.', example_translation: '這種塑膠很有彈性。' }, { word: 'fixable', translation: '可修理的', example: 'The toy is fixable.', example_translation: '這個玩具可以修理。' }, { word: 'formal', translation: '正式的', example: 'a formal dinner', example_translation: '一場正式的晚宴。' }, { word: 'flat', translation: '平的', example: 'The ground is flat.', example_translation: '地面是平的。' }
+            ] },
+            { type: 'reading', difficulty: 2, question: "I need to go to the bank to ____ some money.", translation: "我需要去銀行____一些錢。", options: ["deposit", "depart", "delete", "delay"], answer: 0, keywords: [
+                { word: 'deposit', translation: '存款', example: 'I want to deposit 100 dollars.', example_translation: '我想存 100 元。' }, { word: 'depart', translation: '離開', example: 'The train will depart soon.', example_translation: '火車即將駛離。' }, { word: 'delete', translation: '刪除', example: 'Please delete the file.', example_translation: '請刪除檔案。' }, { word: 'delay', translation: '延遲', example: 'The flight was delayed.', example_translation: '航班延誤了。' }
+            ] },
+
+            // --- 版本 10 (NEW) ---
+            { type: 'reading', difficulty: 1, question: "Can you help me ____ my bag? It's too heavy.", translation: "你能幫我____我的袋子嗎？它太重了。", options: ["carry", "call", "catch", "cook"], answer: 0, keywords: [
+                { word: 'carry', translation: '提；攜帶', example: 'I can carry the box.', example_translation: '我能搬這個箱子。' }, { word: 'call', translation: '打電話；呼叫', example: 'Call me later.', example_translation: '晚點打給我。' }, { word: 'catch', translation: '抓', example: 'catch a ball', example_translation: '接球。' }, { word: 'cook', translation: '烹煮', example: 'Mom is cooking dinner.', example_translation: '媽媽在煮晚餐。' }
+            ] },
+            { type: 'reading', difficulty: 2, question: "This is a ____ area. Please drive slowly.", translation: "這是一個____區域。請慢速駕駛。", options: ["residential", "reasonable", "relative", "recent"], answer: 0, keywords: [
+                { word: 'residential', translation: '住宅的', example: 'a residential street', example_translation: '住宅區街道。' }, { word: 'reasonable', translation: '合理的', example: 'The price is reasonable.', example_translation: '價格是合理的。' }, { word: 'relative', translation: '親戚；相對的', example: 'He is a close relative.', example_translation: '他是個近親。' }, { word: 'recent', translation: '最近的', example: 'a recent photo', example_translation: '一張最近的照片。' }
+            ] },
+            { type: 'reading', difficulty: 2, question: "She has a good ____. She can remember names and dates easily.", translation: "她有很好的____。她能輕易記住名字和日期。", options: ["memory", "member", "metal", "method"], answer: 0, keywords: [
+                { word: 'memory', translation: '記憶力', example: 'I have a bad memory.', example_translation: '我記性不好。' }, { word: 'member', translation: '成員', example: 'He is a team member.', example_translation: '他是團隊成員。' }, { word: 'metal', translation: '金屬', example: 'Gold is a metal.', example_translation: '黃金是一種金屬。' }, { word: 'method', translation: '方法', example: 'a new teaching method', example_translation: '新的教學方法。' }
+            ] },
+            { type: 'reading', difficulty: 3, question: "The company's profits increased ____ last year.", translation: "這家公司的利潤去年____增長。", options: ["significantly", "silently", "similarly", "sincerely"], answer: 0, keywords: [
+                { word: 'significantly', translation: '顯著地', example: 'It increased significantly.', example_translation: '它顯著增長。' }, { word: 'silently', translation: '安靜地', example: 'He sat silently.', example_translation: '他安靜地坐著。' }, { word: 'similarly', translation: '相似地', example: 'They dressed similarly.', example_translation: '他們穿著相似。' }, { word: 'sincerely', translation: '真誠地', example: 'Yours sincerely,', example_translation: '(信末署名) 誠摯地。' }
+            ] },
+            { type: 'reading', difficulty: 1, question: "My mom is a ____. She teaches English at a high school.", translation: "我媽媽是一名____。她在高中教英文。", options: ["teacher", "tailor", "taxi", "team"], answer: 0, keywords: [
+                { word: 'teacher', translation: '老師', example: 'She is a good teacher.', example_translation: '她是個好老師。' }, { word: 'tailor', translation: '裁縫', example: 'The tailor made my suit.', example_translation: '裁縫做了我的西裝。' }, { word: 'taxi', translation: '計程車', example: 'Take a taxi.', example_translation: '搭計程車。' }, { word: 'team', translation: '團隊', example: 'a basketball team', example_translation: '一支籃球隊。' }
+            ] },
+            { type: 'reading', difficulty: 2, question: "The weather is ____ today. It's not too hot or too cold.", translation: "今天天氣____。不會太熱或太冷。", options: ["mild", "wild", "middle", "main"], answer: 0, keywords: [
+                { word: 'mild', translation: '溫和的', example: 'The climate is mild.', example_translation: '氣候溫和。' }, { word: 'wild', translation: '野生的', example: 'wild animals', example_translation: '野生動物。' }, { word: 'middle', translation: '中間', example: 'in the middle of the night', example_translation: '在半夜。' }, { word: 'main', translation: '主要的', example: 'the main problem', example_translation: '主要問題。' }
+            ] },
+            { type: 'reading', difficulty: 2, question: "He is ____ to cats. He starts sneezing when one is near.", translation: "他對貓____。當貓靠近時他會開始打噴嚏。", options: ["allergic", "afraid", "aware", "angry"], answer: 0, keywords: [
+                { word: 'allergic', translation: '過敏的', example: 'I am allergic to dust.', example_translation: '我對灰塵過敏。' }, { word: 'afraid', translation: '害怕的', example: 'She is afraid of spiders.', example_translation: '她怕蜘蛛。' }, { word: 'aware', translation: '意識到的', example: 'I am aware of the risk.', example_translation: '我意識到風險。' }, { word: 'angry', translation: '生氣的', example: 'He was angry with me.', example_translation: '他對我生氣。' }
+            ] },
+            { type: 'reading', difficulty: 3, question: "It is ____ that smoking is bad for your health.", translation: "吸煙對健康有害是____的。", options: ["obvious", "opposite", "oral", "odd"], answer: 0, keywords: [
+                { word: 'obvious', translation: '明顯的', example: 'It is obvious that he is lying.', example_translation: '很明顯他在說謊。' }, { word: 'opposite', translation: '相反的', example: 'the opposite direction', example_translation: '相反的方向。' }, { word: 'oral', translation: '口頭的', example: 'an oral test', example_translation: '口試。' }, { word: 'odd', translation: '奇怪的；奇數的', example: 'That is an odd question.', example_translation: '那是個奇怪的問題。' }
+            ] },
+            { type: 'reading', difficulty: 3, question: "You should ____ a doctor if you feel sick.", translation: "如果你覺得不舒服，你應該____。", options: ["consult", "contain", "confuse", "consume"], answer: 0, keywords: [
+                { word: 'consult', translation: '諮詢', example: 'Consult your lawyer.', example_translation: '諮詢你的律師。' }, { word: 'contain', translation: '包含', example: 'The box contains books.', example_translation: '箱子裡裝著書。' }, { word: 'confuse', translation: '使困惑', example: 'Don\'t confuse me.', example_translation: '別讓我困惑。' }, { word: 'consume', translation: '消耗；消費', example: 'We consume too much energy.', example_translation: '我們消耗太多能源。' }
+            ] }, // FIX: Removed extra colon from type:T:
+            { type: 'reading', difficulty: 2, question: "The ____ of the story is that honesty is the best policy.", translation: "這個故事的____是誠實為上策。", options: ["moral", "model", "motor", "motive"], answer: 0, keywords: [
+                { word: 'moral', translation: '寓意；道德', example: 'The moral of the fable...', example_translation: '這個寓言的寓意是...。' }, { word: 'model', translation: '模型；模特兒', example: 'a fashion model', example_translation: '一位時尚模特儿。' }, { word: 'motor', translation: '馬達', example: 'The motor is broken.', example_translation: '馬達壞了。' }, { word: 'motive', translation: '動機', example: 'What was his motive?', example_translation: '他的動機是什麼？' }
             ] }
         ];
+
 
         const questions = {
             practice: allPracticeQuestions
