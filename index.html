@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>四技二專統測 英文衝刺</title>
+    <title>統測 英文衝刺</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
@@ -227,8 +227,19 @@
                 // };
                 // 5. 將您的 'userProvidedConfig' 貼在下面。
                 
-                const userProvidedConfig = null; // <-- 在這裡貼上您的 firebaseConfig，例如: { apiKey: "...", ... }
+                const userProvidedConfig = { // <-- 這是您貼上的設定
+                    apiKey: "AIzaSyBGKhmlG8jbgTuZB7o6p3prgc4aInIeaZ4",
+                    authDomain: "english-e9852.firebaseapp.com",
+                    projectId: "english-e9852",
+                    storageBucket: "english-e9852.firebasestorage.app",
+                    messagingSenderId: "895420942597",
+                    appId: "1:895420942597:web:eb0192ad35726e05be4f6c"
+                    };
                 
+                /* * 修正: 恢復了原始的 'firebaseConfig' 判斷邏輯。
+                 * 這會優先使用環境變數 (如果存在)，
+                 * 否則回退到您上方貼上的 'userProvidedConfig'。
+                 */
                 const firebaseConfig = (typeof __firebase_config !== 'undefined') 
                     ? JSON.parse(__firebase_config) 
                     : userProvidedConfig;
